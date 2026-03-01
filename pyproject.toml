@@ -1,0 +1,18 @@
+[project]
+name = "telegram-github-mdx"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.14"
+dependencies = [
+    "aiogram>=3.25.0",
+    "alembic>=1.18.4",
+    "psycopg2-binary>=2.9.11",
+    "pydantic-settings>=2.13.1",
+    "sqlalchemy>=2.0.47",
+    "sqlalchemy-orm>=1.2.10",
+]
+
+
+[tool.alembic]
+script_location = "migrations"
+#file_template = "%%(year)d%%(month)d%%(day)d_%%(rev)s"
