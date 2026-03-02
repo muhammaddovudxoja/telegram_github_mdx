@@ -9,6 +9,7 @@ class Region(Model):
     districts: Mapped[list['District']] = relationship('District', back_populates='region')
 
 
+
 class District(Model):
     name: Mapped[str] = mapped_column(String(255))
     region_id: Mapped[int] = mapped_column(ForeignKey('regions.id'))

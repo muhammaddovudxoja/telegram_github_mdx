@@ -9,7 +9,6 @@ from config import settings
 
 
 class Base(DeclarativeBase):
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True, sort_order=-1)
 
     @declared_attr
     def __tablename__(cls):
@@ -51,6 +50,8 @@ db.init()
 
 
 class AbstractClass:
+    id = None
+
     @classmethod
     def commit(cls):
         try:
@@ -153,6 +154,14 @@ class AbstractClass:
 class Model(AbstractClass, Base):
     __abstract__ = True
     excluded = ['id']
+
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        autoincrement=True,
+        sort_order=-1
+    )
+
 
 
 class CreatedBaseModel(Model):
