@@ -38,6 +38,20 @@ The project demonstrates real-world CRUD operations using FSM and inline keyboar
 - Async Programming
 - SQLite / PostgreSQL
 - Inline Keyboard UI
+- SQLAlchemy
+- Alembic
+
+---
+
+telegram_bot/
+│
+├── handlers/
+├── keyboards/
+├── database/
+├── migrations/
+├── .env.example
+└── bot.py
+
 
 ---
 
@@ -57,9 +71,19 @@ telegram_github_mdx/
 
 🔐 Environment Setup
 
-Create a ".env" file in the root directory:
+-Change ".env.example" to ".env" file in the root directory:
 
-TELEGRAM_BOT_TOKEN=your_bot_token_here
+TELEGRAM_BOT_TOKEN=your_token_bot_here
+
+POSTGRES_USER='postgres'
+
+POSTGRES_PASSWORD=your_db_password
+
+POSTGRES_HOST=localhost
+
+POSTGRES_PORT=5432
+
+POSTGRES_DATABASE=your_db_name
 
 ---
 
