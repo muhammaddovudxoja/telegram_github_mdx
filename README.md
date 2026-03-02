@@ -114,7 +114,7 @@ Database Updated
 
 👨‍💻 Author
 
-Muhammad Dovud
+Muhammad Dovud Xoja
 Python Backend Developer
 PDP Academy Student
 
@@ -127,3 +127,9 @@ PDP Academy Student
 - Redis FSM storage
 - Docker support
 - REST API integration
+
+---
+
+ To run the bot
+- .env.example --> .env
+- add your own data
