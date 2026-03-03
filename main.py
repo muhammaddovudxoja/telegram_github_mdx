@@ -26,7 +26,7 @@ dp = Dispatcher()
 #                BOT-3 PROJECT
 
 class UserForm(StatesGroup):
-    user_id = State
+    user_id = State()
     name = State()
     birth_date = State()
     phone = State()
@@ -51,7 +51,7 @@ async def name_handler(message: Message, state: FSMContext):
     if name.replace("'", '').isalpha():
         await state.update_data(name=name.title())
         await state.set_state(UserForm.birth_date)
-        await message.answer('Tugilgan kun kiriting')
+        await message.answer('Tugilgan yilingizni kiriting')
 
     else:
         await message.answer('Ism togri kiriting')
