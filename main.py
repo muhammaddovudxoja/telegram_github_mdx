@@ -3,31 +3,97 @@ import csv
 import logging
 import sys
 
+from datetime import datetime
 from aiogram import Bot, Dispatcher, F
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
-from aiogram.types import Message, InlineKeyboardButton, CallbackQuery, ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import Message, InlineKeyboardButton, CallbackQuery, ReplyKeyboardMarkup, KeyboardButton, \
+    InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from config import settings
 from models.regions import Region, District
 from models.market import Cart, Category, Product
-
+from models.users import User
 
 # redis_url = 'redis://localhost:6379/0'
 # dp = Dispatcher(storage=RedisStorage.from_url(redis_url))
 dp = Dispatcher()
 
+#                BOT-3 PROJECT
+
+class UserForm(StatesGroup):
+    user_id = State
+    name = State()
+    birth_date = State()
+    phone = State()
+
+@dp.message(CommandStart())
+async def start(message: Message, state: FSMContext) -> None:
+    user_id = message.from_user.id
+    users = User.filter(User.id == user_id)
+    print(list(users))
+    if list(users) != []:
+        await message.answer("Siz royxatdan o'tgansiz")
+
+    else:
+        await state.update_data(user_id=user_id)
+        await state.set_state(UserForm.name)
+        await message.answer("Ismingizni kiriting")
+
+
+@dp.message(UserForm.name)
+async def name_handler(message: Message, state: FSMContext):
+    name = message.text
+    if name.replace("'", '').isalpha():
+        await state.update_data(name=name.title())
+        await state.set_state(UserForm.birth_date)
+        await message.answer('Tugilgan kun kiriting')
+
+    else:
+        await message.answer('Ism togri kiriting')
+
+
+@dp.message(UserForm.birth_date)
+async def birth_date_handler(message: Message, state: FSMContext) -> None:
+    if message.text.isdigit():
+        await state.update_data(birth_date=message.text)
+        await state.set_state(UserForm.phone)
+        ikm = InlineKeyboardBuilder()
+        ikm.row(
+            InlineKeyboardButton(
+                text="📱 Contact ulashish",
+                request_contact=True)
+        )
+        await message.answer(
+            "☎️ Telefon raqamingizni kirting",
+            reply_markup=ikm.as_markup(),
+            resize_keyboard=True
+        )
+
+    else:
+        await message.answer("Yilingizni raqamlardan iborat bo'lsin")
 
 
 
+@dp.message(UserForm.phone)
+async def phone_handle(message: Message, state: FSMContext) -> None:
+    await state.update_data(phone=message.text)
+    data = await state.get_data()
+    User.create(id=data['user_id'], name=data['name'], birth_date=data['birth_date'], phone=data['phone'])
 
 
+@dp.message(Command("search"))
+async def search_handler(message: Message) -> None:
+    users = User.get_all()
+    for user in users:
+        if message.text in user:
+            await message.answer(f"Ism:{user.name}\nYil:{user.birth_date}\n{user.phone}")
 
-
+#             yanada qiziqroq project pastda
 
 
 
@@ -191,7 +257,12 @@ dp = Dispatcher()
 #         )
 #     )
 
-
+# @dp.callback_query(F.data == "pickup")
+# async def pickup(callback: CallbackQuery):
+#     await callback.message.answer_location(
+#         latitude=41.3111,
+#         longitude=69.2797
+#     )
 
 
 
