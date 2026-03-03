@@ -5,7 +5,7 @@ from models.base import Model
 
 class User(Model):
     name: Mapped[str] = mapped_column(String)
-    birth_date: Mapped[datetime] = mapped_column(DateTime)
+    birth_date: Mapped[int] = mapped_column(Integer)
     phone: Mapped[str] = mapped_column(String(12), unique=True)
 
 
@@ -13,3 +13,4 @@ class User(Model):
 
 
 
+#
